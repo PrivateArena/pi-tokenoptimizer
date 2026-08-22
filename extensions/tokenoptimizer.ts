@@ -3,8 +3,9 @@
 // Port of zen-mcp internal/shell/tokenoptimizer (tokenoptimizer.go): per-command
 // shell-output compaction (git*, ls, grep, cat, test runners, ruff, jq),
 // chained-command safe optimization, the shell output blacklist, and
-// token-profiles.json actions (replace / file).
-//
+// token-profiles (replace / file). Profiles may be embedded directly in
+// tokenoptimizer.json (`profiles: [...]`) or loaded from a separate file via
+// `profilesPath` (embedded takes precedence).
 // Integration: hooks the `tool_result` event for the built-in `bash` tool
 // and rewrites the text content the LLM sees. Execution, streaming,
 // truncation and UI rendering of the built-in tool are untouched.

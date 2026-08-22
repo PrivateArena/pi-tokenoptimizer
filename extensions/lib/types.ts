@@ -28,6 +28,7 @@ export interface OptimizerConfig {
 	maxChainedLength: number;
 	deduplicateThreshold: number;
 	profilesPath: string;
+	profiles?: TokenProfile[]; // optional: embed token profiles directly here
 	blacklist: BlacklistEntry[];
 }
 

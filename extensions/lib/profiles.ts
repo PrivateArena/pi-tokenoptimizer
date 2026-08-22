@@ -21,17 +21,19 @@ export async function applyTokenProfiles(
 	if (options.skipOptimization) {
 		return { stdout, stderr, applied: false };
 	}
-	const profilesPath = cfg.profilesPath ? resolve(cwd, cfg.profilesPath) : join(cwd, "token-profiles.json");
-	let raw: string;
-	try {
-		raw = await readFile(profilesPath, "utf8");
-	} catch {
-		return { stdout, stderr, applied: false };
-	}
-	let profiles: TokenProfile[];
-	try {
-		profiles = JSON.parse(raw);
-	} catch {
+
+	let profiles: TokenProfile[] | undefined;
+	if (Array.isArray(cfg.profiles) && cfg.profiles.length > 0) {
+		// Profiles embedded directly in tokenoptimizer.json take precedence.
+		profiles = cfg.profiles;
+	} else if (cfg.profilesPath) {
+		const profilesPath = resolve(cwd, cfg.profilesPath);
+		try {
+			profiles = JSON.parse(await readFile(profilesPath, "utf8"));
+		} catch {
+			return { stdout, stderr, applied: false };
+		}
+	} else {
 		return { stdout, stderr, applied: false };
 	}
 	if (!Array.isArray(profiles)) return { stdout, stderr, applied: false };

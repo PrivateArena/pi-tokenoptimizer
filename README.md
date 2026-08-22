@@ -39,11 +39,22 @@ the project:
   "maxChainedLength": 51200,
   "deduplicateThreshold": 3,
   "profilesPath": "token-profiles.json",
+  "profiles": [
+    { "name": "git diff redirection", "match": { "command": "git diff", "type": "contains" }, "action": { "type": "file", "path": "/tmp/zenmcp-do-not-read/", "message": "[Warning: Present to user and do not read: {path}]" } },
+    { "name": "suppress warning", "match": { "command": "reconstruct", "type": "contains" }, "action": { "type": "replace", "find": "CRITICAL WARNING: obsolete format", "replace": "[Obsolete Format Warning Suppressed]" } }
+  ],
   "blacklist": [
     { "match": "terraform plan", "isRegex": false, "maxLines": 30, "dropOutput": false }
   ]
 }
 ```
+
+Token profiles can be embedded directly under `profiles` (shown above) so a
+separate `token-profiles.json` file is unnecessary. If `profiles` is present and
+non-empty it takes precedence over `profilesPath`; otherwise the file at
+`profilesPath` is used. Supported actions are `replace` (literal or regex) and
+`file`. The zen-mcp `delegate` action is **not** supported in pi (it relied on a
+web-agent bridge) and is silently ignored.
 
 ## Slash command
 

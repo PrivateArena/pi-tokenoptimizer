@@ -261,3 +261,18 @@ Deno.test("profiles: delegate is a no-op (not applied)", async () => {
 	includes(r, '"applied":false');
 	includes(r, "hi there");
 });
+Deno.test("profiles: embedded in config (no separate file)", async () => {
+	const profiles: TokenProfile[] = [{ name: "r", match: { command: "echo hi", type: "contains" }, action: { type: "replace", find: "hi", replace: "bye" } }];
+	const res = await applyTokenProfiles("echo hi", "hi there", "", opts(), { ...DEFAULT_CONFIG, profiles }, "/tmp");
+	includes(JSON.stringify(res), '"applied":true');
+	includes(JSON.stringify(res), "bye there");
+});
+Deno.test("profiles: embedded takes precedence over profilesPath file", async () => {
+	const tmp = await Deno.makeTempFile();
+	await Deno.writeTextFile(tmp, JSON.stringify([{ name: "f", match: { command: "zzz", type: "contains" }, action: { type: "replace", find: "hi", replace: "NOPE" } }]));
+	const profiles: TokenProfile[] = [{ name: "r", match: { command: "echo hi", type: "contains" }, action: { type: "replace", find: "hi", replace: "bye" } }];
+	const res = await applyTokenProfiles("echo hi", "hi there", "", opts(), { ...DEFAULT_CONFIG, profilesPath: tmp, profiles }, "/tmp");
+	await Deno.remove(tmp).catch(() => {});
+	includes(JSON.stringify(res), '"applied":true');
+	includes(JSON.stringify(res), "bye there");
+});

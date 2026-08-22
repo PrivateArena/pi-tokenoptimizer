@@ -1,0 +1,53 @@
+{
+  "enabled": true,
+  "ultraCompact": false,
+  "maxChainedLength": 51200,
+  "deduplicateThreshold": 3,
+  "profilesPath": "token-profiles.json",
+  "profiles": [
+    {
+      "name": "git diff → file",
+      "match": { "command": "git diff", "type": "contains" },
+      "action": {
+        "type": "file",
+        "path": "/tmp/pi-do-not-read/",
+        "message": "[Warning: Present to user and do not read: {path}]"
+      }
+    },
+    {
+      "name": "suppress obsolete-format warning",
+      "match": { "command": "reconstruct", "type": "contains" },
+      "action": {
+        "type": "replace",
+        "find": "CRITICAL WARNING: obsolete format",
+        "replace": "[Obsolete Format Warning Suppressed]"
+      }
+    },
+    {
+      "name": "redact api keys via regex",
+      "match": { "command": "print-config", "type": "regex" },
+      "action": {
+        "type": "replace",
+        "is_regex": true,
+        "find": "api[_-]?key[=:]\\s*\\S+",
+        "replace": "api_key=<redacted>",
+        "flags": "i"
+      }
+    }
+  ],
+  "blacklist": [
+    {
+      "match": "terraform plan",
+      "isRegex": false,
+      "maxLines": 30,
+      "dropOutput": false,
+      "label": "terraform plan"
+    },
+    {
+      "match": "^kubectl.*get secrets",
+      "isRegex": true,
+      "dropOutput": true,
+      "label": "k8s secrets"
+    }
+  ]
+}
