@@ -1,5 +1,6 @@
 {
     "pendant.scm.commitMessageInstructions": {
         "model": "kilo/kilo-auto/free"
-    }
+    },
+    "pendant.showThinking": true
 }

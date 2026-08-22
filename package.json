@@ -1,7 +1,7 @@
 {
   "name": "pi-tokenoptimizer",
   "version": "0.1.0",
-  "description": "Token optimizer for pi's bash tool — trims redundant shell output (git, ls, grep, test runners, jq, ruff), applies blacklist rules and token profiles, and virtualizes oversized output to a file handle to save context tokens",
+  "description": "Token optimizer for pi's bash tool — trims redundant shell output (git, ls, grep, test runners, jq, ruff), applies blacklist rules and token profiles to save context tokens",
   "keywords": [
     "pi-package",
     "pi-extension",
@@ -19,6 +19,6 @@
     "@earendil-works/pi-coding-agent": "*"
   },
   "pi": {
-    "extensions": ["./extensions"]
+    "extensions": ["./extensions/tokenoptimizer.ts"]
   }
 }

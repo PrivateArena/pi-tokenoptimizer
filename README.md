@@ -15,9 +15,6 @@ Hooks the `tool_result` event for `bash` and applies, in order:
    (go/cargo/jest/vitest/pytest/rust), `ruff`, `jq`, plus chained-command
    deduplication and a safe global fallback for everything else.
 3. **Blacklist** — cap or suppress output of matched commands.
-4. **Virtualization** — outputs over 24KB are written to
-   `/tmp/pi-virtualized/` and replaced with a compact JSON handle
-   (`index_handle`, full path, line count, vocabulary preview).
 
 Execution, streaming and UI rendering of the built-in bash tool are untouched;
 the handler fails open (never breaks the tool).
